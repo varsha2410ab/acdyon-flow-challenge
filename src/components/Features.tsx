@@ -54,9 +54,8 @@ export const Features: React.FC = () => {
             <motion.div 
               animate={{ 
                 opacity: step >= 2 ? 1 : 0.4,
-                borderColor: step === 2 || step === 3 ? 'rgba(255, 107, 107, 0.4)' : 'rgba(255, 255, 255, 0.09)'
               }} 
-              className={`w-full bg-elevated border rounded py-3 mb-4 transition-colors ${step === 2 || step === 3 ? 'text-status-failure shadow-[0_0_15px_rgba(255,107,107,0.15)]' : 'text-text-secondary'}`}
+              className={`w-full rounded py-3 mb-4 transition-colors ${step === 2 || step === 3 ? 'bg-status-failure/10 border-status-failure/40 border text-status-failure shadow-[0_0_15px_rgba(239,68,68,0.15)]' : 'bg-elevated border border-border text-text-secondary'}`}
             >
               REGRESSION
             </motion.div>

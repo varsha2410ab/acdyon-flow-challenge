@@ -7,23 +7,24 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#07070A',
-        surface: '#0D0E12',
-        elevated: '#12141A',
+        background: '#09090B',
+        surface: '#121217',
+        elevated: '#1A1A22',
         violet: {
-          DEFAULT: '#7667FF',
-          light: '#9B91FF',
+          DEFAULT: '#7C5CFF',
+          light: '#9E85FF',
         },
         text: {
-          primary: '#F5F5F2',
-          secondary: '#9699A5',
+          primary: '#F5F5F5',
+          secondary: '#A1A1AA',
         },
         status: {
-          success: '#43D6A3',
-          warning: '#F4B860',
-          failure: '#FF6B6B',
+          success: '#10B981',
+          warning: '#F59E0B',
+          failure: '#EF4444',
+          info: '#38BDF8',
         },
-        border: 'rgba(255,255,255,0.09)',
+        border: 'rgba(255,255,255,0.08)',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
