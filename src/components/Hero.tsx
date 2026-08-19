@@ -1,23 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Check, AlertTriangle, ArrowLeftCircle, Loader2, Play, Search } from 'lucide-react';
 
 type DeploymentState = 'IDLE' | 'BUILD' | 'DEPLOY' | 'HEALTH_CHECK' | 'REGRESSION' | 'TRAFFIC_FROZEN' | 'ROLLBACK' | 'RESTORED' | 'RECOVERED';
 
 export const Hero: React.FC = () => {
   const [state, setState] = useState<DeploymentState>('IDLE');
-  const [hasAutoPlayed, setHasAutoPlayed] = useState(false);
   const [showRootCause, setShowRootCause] = useState(false);
   
   const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef, { once: true, amount: 0.5 });
-
-  useEffect(() => {
-    if (isInView && !hasAutoPlayed) {
-      setHasAutoPlayed(true);
-      setTimeout(() => setState('BUILD'), 600);
-    }
-  }, [isInView, hasAutoPlayed]);
 
   useEffect(() => {
     const handleTrigger = () => {
@@ -120,150 +111,152 @@ export const Hero: React.FC = () => {
             </div>
 
             {/* Dashboard Content */}
-            <div className="p-6 h-[460px] flex flex-col relative overflow-hidden bg-background">
-              <AnimatePresence mode="wait">
-                
-                {state === 'IDLE' && (
-                  <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col h-full justify-center">
-                    <div className="text-text-secondary mb-8 font-semibold tracking-wide">READY TO DEPLOY</div>
-                    <div className="space-y-4 text-xs">
-                      <div className="flex justify-between border-b border-border pb-2">
-                        <span className="text-text-secondary">Latest release</span>
-                        <span className="text-white">f21d9a7</span>
+            <div className="p-6 h-[540px] flex flex-col relative overflow-hidden bg-background">
+              <div className="flex-1 overflow-y-auto pr-2 scrollbar-hide flex flex-col">
+                <AnimatePresence mode="wait">
+                  
+                  {state === 'IDLE' && (
+                    <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col h-full justify-center pb-12">
+                      <div className="text-text-secondary mb-8 font-semibold tracking-wide">READY TO DEPLOY</div>
+                      <div className="space-y-4 text-xs">
+                        <div className="flex justify-between border-b border-border pb-2">
+                          <span className="text-text-secondary">Latest release</span>
+                          <span className="text-white">f21d9a7</span>
+                        </div>
+                        <div className="flex justify-between border-b border-border pb-2">
+                          <span className="text-text-secondary">Previous stable</span>
+                          <span className="text-white">a81f3c2</span>
+                        </div>
                       </div>
-                      <div className="flex justify-between border-b border-border pb-2">
-                        <span className="text-text-secondary">Previous stable</span>
-                        <span className="text-white">a81f3c2</span>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
+                    </motion.div>
+                  )}
 
-                {state !== 'IDLE' && (
-                  <motion.div key="active" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-4 text-xs lg:text-sm">
-                    
-                    {/* Build Step */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        {state === 'BUILD' ? <Loader2 className="w-4 h-4 animate-spin text-violet" /> : <Check className="w-4 h-4 text-status-success" />}
-                        <span className={state === 'BUILD' ? 'text-white font-semibold' : 'text-text-secondary'}>Build</span>
-                      </div>
-                      {state !== 'BUILD' && <span className="text-status-success">Passed</span>}
-                    </div>
-
-                    {/* Deploy Step */}
-                    {state !== 'BUILD' && (
+                  {state !== 'IDLE' && (
+                    <motion.div key="active" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-4 text-xs lg:text-sm pb-4">
+                      
+                      {/* Build Step */}
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          {state === 'DEPLOY' ? <Loader2 className="w-4 h-4 animate-spin text-violet" /> : <Check className="w-4 h-4 text-status-success" />}
-                          <span className={state === 'DEPLOY' ? 'text-white font-semibold' : 'text-text-secondary'}>Deployment</span>
+                          {state === 'BUILD' ? <Loader2 className="w-4 h-4 animate-spin text-violet" /> : <Check className="w-4 h-4 text-status-success" />}
+                          <span className={state === 'BUILD' ? 'text-white font-semibold' : 'text-text-secondary'}>Build</span>
                         </div>
-                        <span className={state === 'DEPLOY' ? 'text-violet' : 'text-status-success'}>
-                          {state === 'DEPLOY' ? 'In progress' : 'Completed'}
-                        </span>
+                        {state !== 'BUILD' && <span className="text-status-success">Passed</span>}
                       </div>
-                    )}
 
-                    {/* Health Check Step */}
-                    {(state === 'HEALTH_CHECK' || state === 'REGRESSION' || state === 'TRAFFIC_FROZEN' || state === 'ROLLBACK' || state === 'RESTORED' || state === 'RECOVERED') && (
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          {state === 'HEALTH_CHECK' ? <Loader2 className="w-4 h-4 animate-spin text-violet" /> : <AlertTriangle className="w-4 h-4 text-status-warning" />}
-                          <span className={state === 'HEALTH_CHECK' ? 'text-white font-semibold' : 'text-text-secondary'}>Health check</span>
-                        </div>
-                        <span className={state === 'HEALTH_CHECK' ? 'text-violet' : 'text-status-warning'}>
-                          {state === 'HEALTH_CHECK' ? 'Running' : 'Warning'}
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Regression Detected */}
-                    {(state === 'REGRESSION' || state === 'TRAFFIC_FROZEN' || state === 'ROLLBACK' || state === 'RESTORED' || state === 'RECOVERED') && (
-                      <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="flex flex-col gap-2">
+                      {/* Deploy Step */}
+                      {state !== 'BUILD' && (
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <span className="text-status-failure font-bold ml-1 w-3 text-center">!</span>
-                            <span className="text-status-failure font-semibold">Regression detected</span>
+                            {state === 'DEPLOY' ? <Loader2 className="w-4 h-4 animate-spin text-violet" /> : <Check className="w-4 h-4 text-status-success" />}
+                            <span className={state === 'DEPLOY' ? 'text-white font-semibold' : 'text-text-secondary'}>Deployment</span>
                           </div>
-                          <span className="text-status-failure">Failed</span>
-                        </div>
-                        <div className="ml-7 bg-elevated/50 p-2 rounded border border-status-failure/20 text-xs flex justify-between items-center">
-                          <span>
-                            <span className="text-text-secondary">error rate</span> <span className="text-white ml-2">0.8% <span className="text-text-secondary mx-1">→</span> <span className="text-status-failure">7.4%</span></span>
+                          <span className={state === 'DEPLOY' ? 'text-violet' : 'text-status-success'}>
+                            {state === 'DEPLOY' ? 'In progress' : 'Completed'}
                           </span>
-                          <button 
-                            onClick={() => setShowRootCause(!showRootCause)}
-                            className="text-status-info hover:text-white transition-colors flex items-center gap-1 bg-status-info/10 px-2 py-1 rounded"
-                          >
-                            <Search className="w-3 h-3" /> View root cause
-                          </button>
                         </div>
-                        
-                        {/* Root Cause Popover */}
-                        <AnimatePresence>
-                          {showRootCause && (
-                            <motion.div 
-                              initial={{ opacity: 0, height: 0 }} 
-                              animate={{ opacity: 1, height: 'auto' }} 
-                              exit={{ opacity: 0, height: 0 }}
-                              className="ml-7 mt-1 bg-surface border border-border p-3 rounded text-xs overflow-hidden"
+                      )}
+
+                      {/* Health Check Step */}
+                      {(state === 'HEALTH_CHECK' || state === 'REGRESSION' || state === 'TRAFFIC_FROZEN' || state === 'ROLLBACK' || state === 'RESTORED' || state === 'RECOVERED') && (
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            {state === 'HEALTH_CHECK' ? <Loader2 className="w-4 h-4 animate-spin text-violet" /> : <AlertTriangle className="w-4 h-4 text-status-warning" />}
+                            <span className={state === 'HEALTH_CHECK' ? 'text-white font-semibold' : 'text-text-secondary'}>Health check</span>
+                          </div>
+                          <span className={state === 'HEALTH_CHECK' ? 'text-violet' : 'text-status-warning'}>
+                            {state === 'HEALTH_CHECK' ? 'Running' : 'Warning'}
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Regression Detected */}
+                      {(state === 'REGRESSION' || state === 'TRAFFIC_FROZEN' || state === 'ROLLBACK' || state === 'RESTORED' || state === 'RECOVERED') && (
+                        <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="flex flex-col gap-2">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <span className="text-status-failure font-bold ml-1 w-3 text-center">!</span>
+                              <span className="text-status-failure font-semibold">Regression detected</span>
+                            </div>
+                            <span className="text-status-failure">Failed</span>
+                          </div>
+                          <div className="ml-7 bg-elevated/50 p-2 rounded border border-status-failure/20 text-xs flex justify-between items-center">
+                            <span>
+                              <span className="text-text-secondary">error rate</span> <span className="text-white ml-2">0.8% <span className="text-text-secondary mx-1">→</span> <span className="text-status-failure">7.4%</span></span>
+                            </span>
+                            <button 
+                              onClick={() => setShowRootCause(!showRootCause)}
+                              className="text-status-info hover:text-white transition-colors flex items-center gap-1 bg-status-info/10 px-2 py-1 rounded focus:outline-none focus:ring-1 focus:ring-status-info"
                             >
-                              <div className="text-text-secondary mb-2">Regression detected after deployment.</div>
-                              <div className="flex justify-between"><span className="text-text-secondary">Current release:</span> <span className="text-status-failure">f21d9a7</span></div>
-                              <div className="flex justify-between"><span className="text-text-secondary">Known-good release:</span> <span className="text-status-success">a81f3c2</span></div>
-                              <div className="flex justify-between mt-2 pt-2 border-t border-border"><span className="text-text-secondary">Action:</span> <span className="text-violet">automatic rollback</span></div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </motion.div>
-                    )}
+                              <Search className="w-3 h-3" /> View root cause
+                            </button>
+                          </div>
+                          
+                          {/* Root Cause Popover */}
+                          <AnimatePresence>
+                            {showRootCause && (
+                              <motion.div 
+                                initial={{ opacity: 0, height: 0 }} 
+                                animate={{ opacity: 1, height: 'auto' }} 
+                                exit={{ opacity: 0, height: 0 }}
+                                className="ml-7 mt-1 bg-surface border border-border p-3 rounded text-xs overflow-hidden"
+                              >
+                                <div className="text-text-secondary mb-2">Regression detected after deployment.</div>
+                                <div className="flex justify-between"><span className="text-text-secondary">Current release:</span> <span className="text-status-failure">f21d9a7</span></div>
+                                <div className="flex justify-between"><span className="text-text-secondary">Known-good release:</span> <span className="text-status-success">a81f3c2</span></div>
+                                <div className="flex justify-between mt-2 pt-2 border-t border-border"><span className="text-text-secondary">Action:</span> <span className="text-violet">automatic rollback</span></div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </motion.div>
+                      )}
 
-                    {/* Traffic Frozen */}
-                    {(state === 'TRAFFIC_FROZEN' || state === 'ROLLBACK' || state === 'RESTORED' || state === 'RECOVERED') && (
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-between mt-2">
-                        <div className="flex items-center gap-3">
-                          {state === 'TRAFFIC_FROZEN' ? <Loader2 className="w-4 h-4 animate-spin text-violet" /> : <Check className="w-4 h-4 text-status-success" />}
-                          <span className={state === 'TRAFFIC_FROZEN' ? 'text-white font-semibold' : 'text-text-secondary'}>Traffic frozen</span>
-                        </div>
-                      </motion.div>
-                    )}
+                      {/* Traffic Frozen */}
+                      {(state === 'TRAFFIC_FROZEN' || state === 'ROLLBACK' || state === 'RESTORED' || state === 'RECOVERED') && (
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-between mt-2">
+                          <div className="flex items-center gap-3">
+                            {state === 'TRAFFIC_FROZEN' ? <Loader2 className="w-4 h-4 animate-spin text-violet" /> : <Check className="w-4 h-4 text-status-success" />}
+                            <span className={state === 'TRAFFIC_FROZEN' ? 'text-white font-semibold' : 'text-text-secondary'}>Traffic frozen</span>
+                          </div>
+                        </motion.div>
+                      )}
 
-                    {/* Rollback Initiated */}
-                    {(state === 'ROLLBACK' || state === 'RESTORED' || state === 'RECOVERED') && (
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          {state === 'ROLLBACK' ? <Loader2 className="w-4 h-4 animate-spin text-violet" /> : <ArrowLeftCircle className="w-4 h-4 text-violet" />}
-                          <span className={state === 'ROLLBACK' ? 'text-violet font-semibold' : 'text-text-secondary'}>Rollback initiated</span>
-                        </div>
-                      </motion.div>
-                    )}
+                      {/* Rollback Initiated */}
+                      {(state === 'ROLLBACK' || state === 'RESTORED' || state === 'RECOVERED') && (
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-between mt-2">
+                          <div className="flex items-center gap-3">
+                            {state === 'ROLLBACK' ? <Loader2 className="w-4 h-4 animate-spin text-violet" /> : <ArrowLeftCircle className="w-4 h-4 text-violet" />}
+                            <span className={state === 'ROLLBACK' ? 'text-violet font-semibold' : 'text-text-secondary'}>Rollback initiated</span>
+                          </div>
+                        </motion.div>
+                      )}
 
-                    {/* Previous Release Restored */}
-                    {(state === 'RESTORED' || state === 'RECOVERED') && (
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          {state === 'RESTORED' ? <Loader2 className="w-4 h-4 animate-spin text-violet" /> : <Check className="w-4 h-4 text-status-success" />}
-                          <span className={state === 'RESTORED' ? 'text-white font-semibold' : 'text-text-secondary'}>Previous release restored</span>
-                        </div>
-                      </motion.div>
-                    )}
+                      {/* Previous Release Restored */}
+                      {(state === 'RESTORED' || state === 'RECOVERED') && (
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-between mt-2">
+                          <div className="flex items-center gap-3">
+                            {state === 'RESTORED' ? <Loader2 className="w-4 h-4 animate-spin text-violet" /> : <Check className="w-4 h-4 text-status-success" />}
+                            <span className={state === 'RESTORED' ? 'text-white font-semibold' : 'text-text-secondary'}>Previous release restored</span>
+                          </div>
+                        </motion.div>
+                      )}
 
-                    {/* Final Health Check */}
-                    {state === 'RECOVERED' && (
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Check className="w-4 h-4 text-status-success" />
-                          <span className="text-text-secondary">Health check</span>
-                        </div>
-                        <span className="text-status-success">Passed</span>
-                      </motion.div>
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                      {/* Final Health Check */}
+                      {state === 'RECOVERED' && (
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-between mt-2">
+                          <div className="flex items-center gap-3">
+                            <Check className="w-4 h-4 text-status-success" />
+                            <span className="text-text-secondary">Health check</span>
+                          </div>
+                          <span className="text-status-success">Passed</span>
+                        </motion.div>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
               
               {state === 'RECOVERED' && (
-                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="absolute bottom-6 left-6 right-6 pt-4 border-t border-border">
+                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-auto pt-4 border-t border-border">
                     <div className="flex flex-col gap-1 text-xs">
                       <div className="text-violet font-semibold tracking-wide">ROLLED BACK</div>
                       <div className="text-text-primary">a81f3c2 RESTORED</div>
