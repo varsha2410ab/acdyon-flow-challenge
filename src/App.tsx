@@ -45,25 +45,28 @@ const App: React.FC = () => {
         <TechnicalContext />
 
         {/* Final CTA */}
-        <section className="py-32 max-w-4xl mx-auto px-6 text-center">
+        <section className="py-40 max-w-4xl mx-auto px-6 text-center flex flex-col items-center">
           <h2 className="text-5xl md:text-6xl font-bold tracking-tight mb-4">
             Ship the risky change.
           </h2>
           <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-text-secondary mb-8">
-            We'll watch it.
+            Flow will handle what happens next.
           </h2>
-          <p className="text-lg text-text-secondary mb-12">
-            Flow handles the failure path so your team doesn't have to.
-          </p>
+          
           <button 
             onClick={() => {
               window.scrollTo({ top: 0, behavior: 'smooth' });
               setTimeout(() => window.dispatchEvent(new CustomEvent('trigger-deployment')), 800);
             }}
-            className="btn-primary text-lg px-8 py-4"
+            className="btn-primary text-lg px-8 py-4 mb-6"
+            aria-label="Run a deployment"
           >
             Run a deployment
           </button>
+          
+          <p className="text-sm font-mono text-text-secondary">
+            No babysitting. No midnight rollback. Just the next deploy.
+          </p>
         </section>
       </main>
 

@@ -6,12 +6,16 @@ export const TechnicalContext: React.FC = () => {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12 flex justify-center">
+    <div id="context" className="max-w-7xl mx-auto px-6 py-24 flex justify-center">
       <div className="w-full max-w-md bg-surface border border-border rounded-lg overflow-hidden text-sm font-mono shadow-md">
         
         <div 
-          className="px-4 py-3 bg-elevated flex justify-between items-center cursor-pointer hover:bg-elevated/80 transition-colors"
+          className="px-4 py-3 bg-elevated flex justify-between items-center cursor-pointer hover:bg-elevated/80 transition-colors focus:outline-none focus:ring-2 focus:ring-violet/50"
           onClick={() => setExpanded(!expanded)}
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && setExpanded(!expanded)}
+          role="button"
+          aria-expanded={expanded}
         >
           <span className="text-violet font-semibold tracking-wide text-xs">DEPLOYMENT CONTEXT</span>
           <span className="text-text-secondary flex items-center gap-1 text-xs">
