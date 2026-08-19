@@ -82,7 +82,7 @@ export const Hero: React.FC = () => {
             SELF-HEALING DEPLOYMENTS
           </div>
           
-          <h1 className="text-5xl md:text-6xl lg:text-[4rem] font-bold leading-[1.05] tracking-tight mb-8">
+          <h1 className="text-4xl sm:text-5xl lg:text-[4rem] font-bold leading-[1.05] tracking-tight mb-8">
             Deployments that<br />fix themselves.
           </h1>
           
@@ -263,10 +263,12 @@ export const Hero: React.FC = () => {
               </AnimatePresence>
               
               {state === 'RECOVERED' && (
-                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="absolute bottom-6 left-6 right-6 pt-4 border-t border-border flex justify-between items-end">
-                    <div>
-                      <div className="text-status-success font-semibold text-xs tracking-wide mb-1">RECOVERY COMPLETE</div>
-                      <div className="text-text-secondary text-xs">Deployment recovered automatically in 8s.</div>
+                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="absolute bottom-6 left-6 right-6 pt-4 border-t border-border">
+                    <div className="flex flex-col gap-1 text-xs">
+                      <div className="text-violet font-semibold tracking-wide">ROLLED BACK</div>
+                      <div className="text-text-primary">a81f3c2 RESTORED</div>
+                      <div className="text-status-success">HEALTH CHECK: PASSED</div>
+                      <div className="text-text-secondary mt-1">RECOVERED AUTOMATICALLY</div>
                     </div>
                  </motion.div>
               )}

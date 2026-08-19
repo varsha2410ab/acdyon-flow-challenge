@@ -46,10 +46,10 @@ const App: React.FC = () => {
 
         {/* Final CTA */}
         <section className="py-40 max-w-4xl mx-auto px-6 text-center flex flex-col items-center">
-          <h2 className="text-5xl md:text-6xl font-bold tracking-tight mb-4">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4">
             Ship the risky change.
           </h2>
-          <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-text-secondary mb-8">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-text-secondary mb-8">
             Flow will handle what happens next.
           </h2>
           
